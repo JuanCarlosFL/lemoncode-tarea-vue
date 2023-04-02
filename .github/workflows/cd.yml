@@ -12,6 +12,17 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Use SSH key
+        run: |
+          mkdir -p ~/.ssh/
+          echo "${{secrets.SSH_PRIVATE_KEY}}" > ~/.ssh/id_rsa
+          sudo chmod 600 ~/.ssh/id_rsa
+
+      - name: Git config
+        run: |
+          git config --global user.email "cd-user@my-app.com"
+          git config --global user.name "cd-user"
+
       - name: Install
         run: yarn
 
@@ -19,4 +30,4 @@ jobs:
         run: yarn build
 
       - name: Deploy
-        run: yarn deploy
+        run: yarn deploy -- -r git@github.com:JuanCarlosFL/lemoncode-tarea-vue.git
